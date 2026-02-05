@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>A Gift for You ❤️</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;600;800&family=Dancing+Script:wght@600;700&family=Great+Vibes&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --pure-red: #d00000;
+      --deep-crimson: #4a0000;
+      --glass-glow: rgba(255, 255, 255, 0.2);
+    }
+
+    * { box-sizing: border-box; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
+
+    body {
+      margin: 0;
+      background: radial-gradient(circle at center, var(--pure-red) 0%, #800000 60%, var(--deep-crimson) 100%);
+      color: white;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Floating Bokeh background */
+    .bg-heart {
+      position: absolute;
+      pointer-events: none;
+      z-index: 0;
+      animation: floatUp 7s linear infinite;
+      opacity: 0.3;
+    }
+
+    @keyframes floatUp {
+      0% { transform: translateY(110vh) rotate(0deg); opacity: 0; }
+      100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
+    }
+
+    .card {
+      width: 92%;
+      max-width: 400px;
+      background: rgba(0, 0, 0, 0.45);
+      backdrop-filter: blur(25px);
+      -webkit-backdrop-filter: blur(25px);
+      border: 1px solid var(--glass-glow);
+      border-radius: 40px;
+      padding: 40px 25px;
+      text-align: center;
+      box-shadow: 0 40px 80px rgba(0,0,0,0.7);
+      position: relative;
+      z-index: 10;
+    }
+
+    .hidden { display: none; opacity: 0; }
+
+    /* 3D Glass Icon Styles */
+    .icon-3d {
+      width: 80px; height: 80px;
+      margin: 0 auto 15px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 20px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 45px;
+      box-shadow: inset 5px 5px 15px rgba(255,255,255,0.2), 5px 10px 20px rgba(0,0,0,0.4);
+      border: 1px solid var(--glass-glow);
+      filter: drop-shadow(0 0 10px var(--pure-red));
+    }
+
+    h1 { font-family: 'Dancing Script', cursive; font-size: 3.2rem; margin: 0; }
+    h2 { font-family: 'Playfair Display', serif; font-size: 1.8rem; margin-bottom: 25px; color: #fff; }
+
+    /* Menu Buttons */
+    .options { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 30px; }
+    .option {
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 24px; padding: 25px; cursor: pointer; font-size: 38px;
+      transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      border: 1px solid rgba(255,255,255,0.1);
+      box-shadow: 0 8px 15px rgba(0,0,0,0.2);
+    }
+    .option:active { transform: scale(0.85); box-shadow: none; }
+
+    /* Soul Connection Zone */
+    #game-container {
+      height: 320px; position: relative;
+      background: rgba(0,0,0,0.3); border-radius: 35px;
+      margin: 20px 0; border: 1px solid rgba(255,255,255,0.1);
+      touch-action: none; overflow: hidden;
+    }
+
+    .heart-3d {
+      position: absolute; font-size: 55px; cursor: grab;
+      filter: drop-shadow(0 10px 15px rgba(255,0,0,0.6));
+      animation: heartPulse 2s infinite ease-in-out;
+      z-index: 20;
+    }
+
+    @keyframes heartPulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.15); }
+    }
+
+    #my-heart { top: 15%; left: 15%; }
+    #your-heart { bottom: 15%; right: 15%; }
+
+    .fusion-msg {
+      font-family: 'Great Vibes', cursive; font-size: 2.2rem;
+      padding: 40px 20px; display: none;
+      animation: zoomIn 1s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    }
+
+    @keyframes zoomIn { from { transform: scale(0.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+    /* Jar Items */
+    #jar-content { height: 280px; overflow-y: auto; padding: 10px; scrollbar-width: none; }
+    .reason-note {
+      background: #fff; color: var(--pure-red); padding: 18px; margin: 18px 0;
+      border-radius: 25px 25px 25px 5px; font-weight: 800; font-size: 1rem;
+      box-shadow: 0 12px 25px rgba(0,0,0,0.3);
+      transform: translateY(30px) scale(0); opacity: 0;
+      transition: 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .btn-main {
+      background: #fff; color: var(--pure-red); padding: 16px 40px; border-radius: 50px;
+      font-size: 16px; font-weight: 800; cursor: pointer; border: none;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2); transition: 0.3s;
+    }
+
+    .credit { margin-top: 30px; font-size: 0.65rem; letter-spacing: 4px; opacity: 0.8; font-weight: 800; color: #fff; }
+  </style>
+</head>
+<body>
+
+  <div id="hearts-container"></div>
+
+  <div class="card" id="startPage">
+    <div class="png>"</div>
+    <h1>Hi Beautiful ❤️</h1>
+    <p style="margin-bottom: 30px; font-size: 1rem; opacity: 0.9;">The world awaits your touch.</p>
+    <button class="btn-main" onclick="startSurprise()">UNLOCK MY HEART</button>
+    <div class="credit">BRIAN N IRUNGU</div>
+  </div>
+
+  <div class="card hidden" id="menuPage">
+    <h2>Special Menu</h2>
+    <div class="options">
+      <div class="option" onclick="goTo('letterPage')">💌</div>
+      <div class="option" onclick="goTo('jarPage')">🫙</div>
+      <div class="option" onclick="goTo('gamePage')">💖</div>
+      <div class="option" onclick="goTo('musicPage')">🎵</div>
+    </div>
+    <div class="credit">BRIAN N IRUNGU</div>
+  </div>
+
+  <div class="card hidden" id="letterPage">
+    <div class="icon-3d">📜</div>
+    <div style="font-family: 'Great Vibes', cursive; font-size: 2.2rem; line-height: 1.5; min-height: 220px; color: #fff;"><span id="typewriter"></span></div>
+    <button class="btn-main" style="padding: 10px 25px; font-size: 13px; margin-top: 20px;" onclick="goTo('menuPage')">BACK</button>
+  </div>
+
+  <div class="card hidden" id="jarPage">
+    <div class="icon-3d">🫙</div>
+    <h2 style="margin: 0; font-size: 1.5rem;">Jar of Reasons</h2>
+    <div id="jar-content"></div>
+    <button class="btn-main" style="padding: 10px 25px; font-size: 13px; margin-top: 20px;" onclick="goTo('menuPage')">BACK</button>
+  </div>
+
+  <div class="card hidden" id="gamePage">
+    <h2>Soul Connection</h2>
+    <p style="font-size: 0.85rem; opacity: 0.8;">Unite our souls into one...</p>
+    
+    <div id="game-container">
+      <div id="my-heart" class="heart-3d">❤️</div>
+      <div id="your-heart" class="heart-3d">❤️</div>
+      <div id="fusion-note" class="fusion-msg">
+        "Two souls, one heartbeat. Every second with you is my favorite birthday gift."
+      </div>
+    </div>
+    
+    <button class="btn-main" style="padding: 10px 25px; font-size: 13px;" onclick="goTo('menuPage')">BACK</button>
+    <div class="credit">special dedication from Brian N Irungu</div>
+  </div>
+
+  <div class="card hidden" id="musicPage">
+    <div class="icon-3d">🎧</div>
+    <h2>Our Track</h2>
+    <p style="opacity: 0.8; margin-bottom: 25px;">Iyanii — Unanifaa</p>
+    <div id="player-container">
+        <button class="btn-main" onclick="playMusic()">▶ PLAY SONG</button>
+    </div>
+    <button class="btn-main" style="padding: 10px 25px; font-size: 13px; margin-top: 20px;" onclick="goTo('menuPage')">BACK</button>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+
+  <script>
+    const reasons = [
+        "Your beautiful, kind soul ❤️",
+        "The way you look at me ✨",
+        "How you make every day brighter ☀️",
+        "Your infectious, magic laugh 🎵",
+        "Simply being my best friend 🥺",
+        "The way you believe in me 🫶"
+    ];
+    
+    const messageText = "Happy Valentine, my love! You are the light in my world and the rhythm in my heart. Today is all about celebrating the masterpiece that is you. I love you! ❤️";
+
+    function startSurprise() {
+      confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 }, colors: ['#ffffff', '#ff0000'] });
+      goTo('menuPage');
+    }
+
+    function goTo(pageId) {
+      document.querySelectorAll('.card').forEach(c => { c.classList.add('hidden'); c.style.display = 'none'; });
+      const next = document.getElementById(pageId);
+      next.style.display = 'block';
+      setTimeout(() => next.classList.remove('hidden'), 50);
+
+      if(pageId === 'letterPage') startTypewriter();
+      if(pageId === 'jarPage') fillJar();
+      if(pageId === 'gamePage') initSoulGame();
+    }
+
+    function startTypewriter() {
+      const display = document.getElementById('typewriter');
+      display.innerHTML = ""; let i = 0;
+      // REDUCED SPEED: 80ms per char
+      function type() { if (i < messageText.length) { display.innerHTML += messageText.charAt(i); i++; setTimeout(type, 80); } }
+      type();
+    }
+
+    function fillJar() {
+      const jar = document.getElementById('jar-content'); 
+      jar.innerHTML = "";
+      reasons.forEach((text, i) => {
+        const note = document.createElement('div');
+        note.className = 'reason-note';
+        note.innerHTML = text;
+        jar.appendChild(note);
+        // REDUCED SPEED: 800ms between notes
+        setTimeout(() => {
+          note.style.opacity = '1';
+          note.style.transform = 'translateY(0) scale(1)';
+        }, i * 800);
+      });
+    }
+
+    function initSoulGame() {
+      const myHeart = document.getElementById('my-heart');
+      const yourHeart = document.getElementById('your-heart');
+      const container = document.getElementById('game-container');
+      const fusionNote = document.getElementById('fusion-note');
+      
+      let activeHeart = null;
+      let connected = false;
+
+      function onMove(e) {
+        if (!activeHeart || connected) return;
+        const rect = container.getBoundingClientRect();
+        const x = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left - 30;
+        const y = (e.touches ? e.touches[0].clientY : e.clientY) - rect.top - 30;
+        
+        activeHeart.style.left = x + 'px';
+        activeHeart.style.top = y + 'px';
+
+        const r1 = myHeart.getBoundingClientRect();
+        const r2 = yourHeart.getBoundingClientRect();
+        const distance = Math.sqrt(Math.pow(r1.x - r2.x, 2) + Math.pow(r1.y - r2.y, 2));
+
+        if (distance < 50) {
+          connected = true;
+          myHeart.style.display = 'none';
+          yourHeart.style.display = 'none';
+          fusionNote.style.display = 'block';
+          confetti({ particleCount: 250, spread: 120, colors: ['#ffffff', '#ff0000'] });
+        }
+      }
+
+      [myHeart, yourHeart].forEach(h => {
+        h.addEventListener('mousedown', () => activeHeart = h);
+        h.addEventListener('touchstart', () => activeHeart = h);
+      });
+
+      window.addEventListener('mousemove', onMove);
+      window.addEventListener('touchmove', onMove);
+      window.addEventListener('mouseup', () => activeHeart = null);
+      window.addEventListener('touchend', () => activeHeart = null);
+    }
+
+    function playMusic() {
+      document.getElementById('player-container').innerHTML = <iframe src="https://www.youtube.com/embed/1ho0ixDMsos?autoplay=1" width="100%" height="150" frameborder="0" allow="autoplay"></iframe>;
+    }
+
+    function createHeart() {
+      const h = document.createElement('div');
+      h.classList.add('bg-heart');
+      h.innerHTML = '❤️';
+      h.style.left = Math.random() * 100 + 'vw';
+      h.style.fontSize = (Math.random() * 15 + 10) + 'px';
+      document.getElementById('hearts-container').appendChild(h);
+      setTimeout(() => h.remove(), 7000);
+    }
+    setInterval(createHeart, 500);
+  </script>
+</body>
+</html>
